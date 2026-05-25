@@ -469,7 +469,34 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   font-weight: 600;
   margin-bottom: 0.25rem;
 }
-.tl-company { font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.4rem; }
+.tl-company { font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.5rem; }
+
+.co-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  background: var(--co-color, var(--accent));
+  color: var(--co-text, #fff);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  flex-shrink: 0;
+  font-family: 'Space Grotesk', sans-serif;
+}
+.co-logo {
+  height: 22.4px;
+  width: 72px;
+  object-fit: contain;
+  object-position: center center;
+  background: #fff;
+  border-radius: 20px;
+  padding: 3px 8px;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
 .tl-badges  { display: flex; flex-direction: column; align-items: flex-end; gap: 0.35rem; flex-shrink: 0; }
 
 .badge { padding: 2px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.3px; }
@@ -570,8 +597,15 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   color: var(--pill-text);
   border: 1px solid var(--pill-border);
   transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
 }
+.pill i { font-size: 1rem; flex-shrink: 0; }
+.pill-icon { width: 1rem; height: 1rem; object-fit: contain; flex-shrink: 0; }
 .pill:hover { background: var(--accent); color: #fff; border-color: var(--accent); transform: translateY(-2px); }
+.pill:hover i { filter: brightness(10); }
+.pill:hover .pill-icon { filter: brightness(0) invert(1); }
 
 .lang-items { display: flex; flex-direction: column; gap: 0.7rem; margin-bottom: 0.75rem; }
 .lang-row   { display: flex; align-items: center; justify-content: space-between; }
