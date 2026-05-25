@@ -585,8 +585,10 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   gap: 0.4rem;
 }
 .pill i { font-size: 1rem; flex-shrink: 0; }
+.pill-icon { width: 1rem; height: 1rem; object-fit: contain; flex-shrink: 0; }
 .pill:hover { background: var(--accent); color: #fff; border-color: var(--accent); transform: translateY(-2px); }
 .pill:hover i { filter: brightness(10); }
+.pill:hover .pill-icon { filter: brightness(0) invert(1); }
 
 .lang-items { display: flex; flex-direction: column; gap: 0.7rem; margin-bottom: 0.75rem; }
 .lang-row   { display: flex; align-items: center; justify-content: space-between; }
