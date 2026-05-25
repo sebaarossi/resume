@@ -93,7 +93,7 @@ themeBtn.addEventListener('click', () => {
 =================================== */
 new Typed('#typed-text', {
   strings: [
-    'Fullstack Software Developer',
+    'Backend Software Developer',
     'Systems Engineering Student',
     'Problem Solver',
     'Tech Enthusiast',
