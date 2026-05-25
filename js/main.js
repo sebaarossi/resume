@@ -89,21 +89,45 @@ themeBtn.addEventListener('click', () => {
 });
 
 /* ===================================
+   SCROLL REVEAL — IntersectionObserver
+   (runs first so it works even if CDNs fail)
+=================================== */
+const revealEls = document.querySelectorAll('.reveal');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.1 });
+
+revealEls.forEach(el => observer.observe(el));
+
+// Hard fallback: show everything after 2s in case observer never fires
+setTimeout(() => {
+  revealEls.forEach(el => el.classList.add('visible'));
+}, 2000);
+
+/* ===================================
    TYPED.JS
 =================================== */
-new Typed('#typed-text', {
-  strings: [
-    'Backend Software Developer',
-    'Systems Engineering Student',
-    'Problem Solver',
-    'Tech Enthusiast',
-  ],
-  typeSpeed:  55,
-  backSpeed:  30,
-  backDelay:  1800,
-  loop:       true,
-  showCursor: false,
-});
+if (typeof Typed !== 'undefined') {
+  new Typed('#typed-text', {
+    strings: [
+      'Backend Software Developer',
+      'Systems Engineering Student',
+      'Problem Solver',
+      'Tech Enthusiast',
+    ],
+    typeSpeed:  55,
+    backSpeed:  30,
+    backDelay:  1800,
+    loop:       true,
+    showCursor: false,
+  });
+} else {
+  // Fallback static text if CDN failed
+  document.getElementById('typed-text').textContent = 'Backend Software Developer';
+}
 
 /* ===================================
    PARTICLE CANVAS
@@ -177,17 +201,3 @@ function drawLines() {
   requestAnimationFrame(animate);
 })();
 
-/* ===================================
-   SCROLL REVEAL — IntersectionObserver
-=================================== */
-const revealEls = document.querySelectorAll('.reveal');
-
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-    }
-  });
-}, { threshold: 0.1 });
-
-revealEls.forEach(el => observer.observe(el));
