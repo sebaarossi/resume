@@ -76,15 +76,19 @@ const themeBtn = document.getElementById('themeBtn');
 const html     = document.documentElement;
 const icon     = themeBtn.querySelector('i');
 
-const saved = localStorage.getItem('theme') || 'dark';
-html.setAttribute('data-theme', saved);
-icon.className = saved === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+// Only apply saved theme if user explicitly set it on this site
+const saved = localStorage.getItem('sr-theme');
+if (saved === 'light' || saved === 'dark') {
+  html.setAttribute('data-theme', saved);
+}
+const current = html.getAttribute('data-theme') || 'dark';
+icon.className = current === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
 
 themeBtn.addEventListener('click', () => {
-  const isDark   = html.getAttribute('data-theme') === 'dark';
-  const next     = isDark ? 'light' : 'dark';
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  const next   = isDark ? 'light' : 'dark';
   html.setAttribute('data-theme', next);
-  localStorage.setItem('theme', next);
+  localStorage.setItem('sr-theme', next);
   icon.className = next === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
 });
 
