@@ -414,8 +414,22 @@
         <a href="tel:+5491134687322" aria-label="Phone"><i class="fas fa-phone"></i></a>
       </div>
       <p class="footer-copy">Sebastian Rossi © 2024 · Built with HTML, CSS &amp; Vanilla JS</p>
+      <button class="game-btn" id="gameBtn" title="Secret game 🦕">
+        <i class="fas fa-gamepad"></i>
+      </button>
     </div>
   </footer>
+
+  <!-- Dino Game Modal -->
+  <div class="game-modal" id="gameModal">
+    <div class="game-panel">
+      <button class="game-close" id="gameClose">×</button>
+      <p class="game-panel-title">🦕 Easter Egg</p>
+      <canvas id="dinoCanvas" width="400" height="150"></canvas>
+      <p class="game-hint">Space / Tap to jump &nbsp;·&nbsp; ESC to close</p>
+      <p class="game-over-msg" id="gameOverMsg"></p>
+    </div>
+  </div>
 
   <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
   <script src="js/main.js"></script>
