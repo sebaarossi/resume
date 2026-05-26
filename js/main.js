@@ -424,7 +424,7 @@ function drawLines() {
   }
 
   function openGame() {
-    gameModal.classList.add('open');
+    gameModal.style.display = 'flex';
     gameStarted = false;
     gameActive  = false;
     cancelAnimationFrame(rafId);
@@ -433,7 +433,7 @@ function drawLines() {
   }
 
   function closeGame() {
-    gameModal.classList.remove('open');
+    gameModal.style.display = 'none';
     gameActive = false;
     cancelAnimationFrame(rafId);
   }
@@ -445,7 +445,7 @@ function drawLines() {
   dinoCanvas.addEventListener('touchstart', e => { e.preventDefault(); jump(); }, { passive: false });
 
   document.addEventListener('keydown', e => {
-    if (!gameModal.classList.contains('open')) return;
+    if (gameModal.style.display !== 'flex') return;
     if (e.code === 'Space') { e.preventDefault(); jump(); }
     if (e.code === 'Escape') closeGame();
   });
