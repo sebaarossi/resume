@@ -225,15 +225,19 @@ function drawLines() {
   const OBSTACLE = '#94a3b8';
 
   let rafId, gameActive = false, gameStarted = false;
-  let score, hiScore = 0, spd, frame, dino, obstacles, nextObs;
+  let score, bonusScore, hiScore = 0, spd, frame, dino, obstacles, nextObs;
+  let coins, nextCoin, popups;
 
   function init() {
-    score     = 0;
-    spd       = 4.5;
-    frame     = 0;
-    dino      = { x: 60, y: GROUND - DH, vy: 0, grounded: true };
-    obstacles = [];
-    nextObs   = 110;
+    bonusScore = 0;
+    spd        = 4.5;
+    frame      = 0;
+    dino       = { x: 60, y: GROUND - DH, vy: 0, grounded: true };
+    obstacles  = [];
+    nextObs    = 110;
+    coins      = [];
+    nextCoin   = 90 + Math.random() * 60;
+    popups     = [];
     gameActive  = true;
     gameStarted = true;
     gameOverMsg.textContent = '';
@@ -276,11 +280,33 @@ function drawLines() {
     );
   }
 
+  function drawCoin(c) {
+    // Outer ring
+    dc.beginPath();
+    dc.arc(c.x, c.y, 8, 0, Math.PI * 2);
+    dc.fillStyle = '#fbbf24';
+    dc.fill();
+    // Inner shine
+    dc.beginPath();
+    dc.arc(c.x - 2, c.y - 2, 4, 0, Math.PI * 2);
+    dc.fillStyle = '#fde68a';
+    dc.fill();
+    // "$" symbol
+    dc.fillStyle = '#92400e';
+    dc.font = 'bold 9px monospace';
+    dc.textAlign = 'center';
+    dc.textBaseline = 'middle';
+    dc.fillText('$', c.x, c.y + 1);
+    dc.textBaseline = 'alphabetic';
+    dc.textAlign = 'left';
+  }
+
   function loop() {
     dc.clearRect(0, 0, GW, GH);
     frame++;
-    score = Math.floor(frame / 7);
-    if (frame % 350 === 0) spd = Math.min(spd + 0.4, 13);
+    score = Math.floor(frame / 7) + bonusScore;
+    // Speed ramps up every 300 frames
+    if (frame % 300 === 0) spd = Math.min(spd + 0.5, 15);
 
     // Ground line
     dc.fillStyle = 'rgba(20,184,166,0.35)';
@@ -296,20 +322,64 @@ function drawLines() {
     }
     drawDino();
 
-    // Obstacles
+    // Obstacles — gap shrinks as speed grows
     nextObs--;
     if (nextObs <= 0) {
       const h = 32 + Math.random() * 28;
       const w = 18 + Math.random() * 14;
       obstacles.push({ x: GW + 10, w, h });
-      nextObs = 75 + Math.random() * 85;
+      const minGap = Math.max(38, 75 - (spd - 4.5) * 6);
+      const rndGap = Math.max(28, 85 - (spd - 4.5) * 7);
+      nextObs = minGap + Math.random() * rndGap;
     }
-
     for (let i = obstacles.length - 1; i >= 0; i--) {
       obstacles[i].x -= spd;
       drawCactus(obstacles[i]);
       if (hit(obstacles[i])) { endGame(); return; }
       if (obstacles[i].x + obstacles[i].w < 0) obstacles.splice(i, 1);
+    }
+
+    // Coins
+    nextCoin--;
+    if (nextCoin <= 0) {
+      const count   = 1 + Math.floor(Math.random() * 3); // 1, 2 or 3
+      const airCoin = Math.random() < 0.5;
+      const coinY   = airCoin
+        ? GROUND - DH - 18 - Math.random() * 22
+        : GROUND - 10;
+      for (let k = 0; k < count; k++) {
+        coins.push({ x: GW + 20 + k * 22, y: coinY });
+      }
+      nextCoin = 80 + Math.random() * 90;
+    }
+    for (let i = coins.length - 1; i >= 0; i--) {
+      const c = coins[i];
+      c.x -= spd;
+      drawCoin(c);
+      // Collect?
+      const cx = dino.x + DW / 2, cy = dino.y + DH / 2;
+      if (Math.hypot(cx - c.x, cy - c.y) < 20) {
+        bonusScore += 10;
+        popups.push({ x: c.x, y: c.y, text: '+10', life: 40 });
+        coins.splice(i, 1);
+        continue;
+      }
+      if (c.x < -10) coins.splice(i, 1);
+    }
+
+    // Popups (+10)
+    for (let i = popups.length - 1; i >= 0; i--) {
+      const p = popups[i];
+      p.y   -= 1;
+      p.life--;
+      dc.globalAlpha = p.life / 40;
+      dc.fillStyle   = '#fbbf24';
+      dc.font        = 'bold 11px "Space Grotesk", monospace';
+      dc.textAlign   = 'center';
+      dc.fillText(p.text, p.x, p.y);
+      dc.textAlign   = 'left';
+      dc.globalAlpha = 1;
+      if (p.life <= 0) popups.splice(i, 1);
     }
 
     // HUD
